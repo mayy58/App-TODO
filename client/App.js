@@ -4,7 +4,6 @@ import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Task from "./component/Task";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import InputTask from "./component/InputTask";
-//import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [todos, setTodos] = useState([]);
@@ -15,7 +14,7 @@ export default function App() {
 
   async function fetchData() {
     try {
-      const response = await fetch("http://localhost:8080/todos/1");
+      const response = await fetch("http://192.168.100.96:8080/todos/1");
       const data = await response.json();
       setTodos(data);
     } catch (error) {
@@ -38,23 +37,29 @@ export default function App() {
   }
 
   return (
-    /*    <GestureHandlerRootView> */
     <BottomSheetModalProvider>
       <SafeAreaView style={styles.container}>
-        <FlatList
-          data={todos}
-          keyExtractor={(todo) => todo.id}
-          renderItem={({ item }) => (
-            <Task {...item} toggleTodo={toggleTodo} clearTodo={clearTodo} />
-          )}
-          ListHeaderComponent={() => <Text style={styles.title}>Today</Text>}
-          contentContainerStyle={styles.contentContainerStyle}
-        />
-        <InputTask todos={todos} setTodos={setTodos} />
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 10,
+            paddingTop: Platform.OS === "android" && 30,
+          }}
+        >
+          <FlatList
+            data={todos}
+            keyExtractor={(todo) => todo.id}
+            renderItem={({ item }) => (
+              <Task {...item} toggleTodo={toggleTodo} clearTodo={clearTodo} />
+            )}
+            ListHeaderComponent={() => <Text style={styles.title}>Today</Text>}
+            contentContainerStyle={styles.contentContainerStyle}
+          />
+          <InputTask todos={todos} setTodos={setTodos} />
+        </View>
       </SafeAreaView>
       <StatusBar style="auto" />
     </BottomSheetModalProvider>
-    /*     </GestureHandlerRootView> */
   );
 }
 
